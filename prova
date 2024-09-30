@@ -1,0 +1,45 @@
+
+(Consulta de Funcionários)
+1 - SELECT id_vendedor, nome, salario  FROM `vendedores` WHERE inativo = false ORDER BY nome;OK
+
+
+(Funcionários com Salário Acima da Média)
+2 - SELECT ID_VENDEDOR, NOME,SALARIO from vendedores 
+where  vendedores.SALARIO > (SELECT AVG(SALARIO) FROM vendedores)
+ORDER BY SALARIO DESC;
+
+(Resumo por cliente)
+3 - SELECT C.ID_CLIENTE AS ID,C.RAZAO_SOCIAL, SUM(VALOR_TOTAL) AS TOTAL FROM PEDIDO P JOIN clientes C
+ON P.ID_CLIENTE = C.ID_CLIENTE
+GROUP BY C.ID_CLIENTE
+ORDER BY P.VALOR_TOTAL DESC
+
+(Situação por pedido)
+4 - SELECT ID_PEDIDO AS ID,
+VALOR_TOTAL AS VALOR,
+DATA_EMISSAO AS DATA,
+
+	CASE
+        WHEN (DATA_CANCELAMENTO) IS NOT NULL  THEN 'CANCELADO'
+        WHEN (DATA_FATURAMENTO) IS NOT NULL THEN 'FATURADO'
+        ELSE 'PENDENTE'
+    END  AS SITUACAO
+    FROM 
+    PEDIDO 
+;
+
+(Produtos mais vendidos)
+5 - SELECT
+  ID_PRODUTO,
+  sum(quantidade) AS QUANTIDADE_VENDIDA,SUM(P.VALOR_TOTAL) AS TOTAL_VENDIDO,COUNT(P.ID_PEDIDO) AS PEDIDOS,COUNT(ID_CLIENTE) AS CLIENTES
+FROM 
+  itens_pedido IP JOIN
+  PEDIDO P
+  ON IP.ID_PEDIDO = P.ID_PEDIDO 
+GROUP BY
+  id_produto
+ORDER BY
+  quantidade_vendida DESC
+LIMIT
+
+1;
